@@ -9,7 +9,10 @@ import { TodoItem } from './todoitem';
 })
 export class TodoComponent {
 
-  constructor() { }
+  constructor() {
+    this.model.items = this.getItemsFormList();
+   }
+
   message: string = "";
   model = new Model();
   displayAll: boolean = false;
@@ -29,12 +32,23 @@ export class TodoComponent {
     let data = { description: this.inputTxt, action: false };
     if (this.inputTxt != "") {
       this.model.items.push(data);
-      let items = [];
+
+      let items = this.getItemsFormList();
       items.push(data);
       localStorage.setItem("items", JSON.stringify(items));
       this.inputTxt = "";
     } else
       alert("Lütfen bir değer giriniz!")
+  }
+  getItemsFormList(){
+    let items:TodoItem[] = [];
+    let value = localStorage.getItem("items");
+
+    if(value != null){
+      items = JSON.parse(value);
+    }
+
+    return items;
   }
   displayCount() {
     return this.model.items.filter(i => i.action).length;
@@ -45,5 +59,17 @@ export class TodoComponent {
       'btn-secondary': this.inputTxt.length == 0,
       'btn-primary': this.inputTxt.length > 0
     }
+  }
+  onActionChanged(item: TodoItem){
+    let items = this.getItemsFormList();
+    localStorage.clear();
+
+    items.forEach(i=>{
+      if(i.description == item.description){
+        i.action = item.action;
+      }
+    });
+    localStorage.setItem("items",JSON.stringify(items));
+    console.log(item);
   }
 }

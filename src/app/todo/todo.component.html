@@ -67,7 +67,8 @@
                             <td><input 
                                 type="checkbox" [(ngModel)]="item.action" 
                                 name="" 
-                                id=""></td>
+                                id=""
+                                (change)="onActionChanged(item)"></td>
                         </tr>
                     </tbody>
                 </table>
